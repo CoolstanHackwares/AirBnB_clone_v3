@@ -158,3 +158,48 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(old_created_at, new_created_at)
         self.assertTrue(mock_storage.new.called)
         self.assertTrue(mock_storage.save.called)
+
+    def test_equality(self):
+        """Test equality of BaseModel instances"""
+        inst1 = BaseModel()
+        inst2 = BaseModel()
+        self.assertEqual(inst1, inst2)
+
+        # Modify an attribute of inst1
+        inst1.name = "Test"
+        self.assertNotEqual(inst1, inst2)
+
+    def test_attribute_modification(self):
+        """Test modification of attributes"""
+        inst = BaseModel()
+        old_updated_at = inst.updated_at
+        inst.name = "Test"
+        self.assertNotEqual(old_updated_at, inst.updated_at)
+
+    def test_attribute_deletion(self):
+        """Test deletion of attributes"""
+        inst = BaseModel()
+        old_updated_at = inst.updated_at
+        del inst.name
+        self.assertNotEqual(old_updated_at, inst.updated_at)
+
+    def test_serialization_deserialization(self):
+        """Test serialization and deserialization"""
+        inst = BaseModel()
+        inst.name = "Test"
+        inst_json = inst.to_dict()
+        new_inst = BaseModel(**inst_json)
+        self.assertEqual(inst, new_inst)
+
+    def test_initialization_with_parameters(self):
+        """Test initialization with parameters"""
+        inst = BaseModel(name="Test", number=10)
+        self.assertEqual(inst.name, "Test")
+        self.assertEqual(inst.number, 10)
+
+    def test_initialization_without_parameters(self):
+        """Test initialization without parameters"""
+        inst = BaseModel()
+        self.assertIsNotNone(inst.id)
+        self.assertIsNotNone(inst.created_at)
+        self.assertIsNotNone(inst.updated_at)
