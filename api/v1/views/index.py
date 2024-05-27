@@ -5,8 +5,8 @@
         /status:    display "status":"OK"
         /stats:     dispaly total for all classes
 '''
-from api.v1.views import app_views
 from flask import jsonify
+from api.v1.views import app_views
 from models import storage
 
 @app_views.route('/status', methods=['GET'])
@@ -16,26 +16,11 @@ def get_status():
 @app_views.route("/stats")
 def storage_counts():
     '''
-        return counts of all classes in storage
+    Return counts of all classes in storage
     '''
+    class_names = ["Amenity", "City", "Place", "Review", "State", "User"]
     cls_counts = {
-        "amenities": storage.count("Amenity"),
-        "cities": storage.count("City"),
-        "places": storage.count("Place"),
-        "reviews": storage.count("Review"),
-        "states": storage.count("State"),
-        "users": storage.count("User")
+        cls_name.lower() + "s": storage.count(cls_name)
+        for cls_name in class_names
     }
     return jsonify(cls_counts)
-
-def get_stats():
-    """Get the number of each object type"""
-    stats = {
-        "amenities": storage.count("Amenity"),
-        "cities": storage.count("City"),
-        "places": storage.count("Place"),
-        "reviews": storage.count("Review"),
-        "states": storage.count("State"),
-        "users": storage.count("User")
-    }
-    return jsonify(stats)
