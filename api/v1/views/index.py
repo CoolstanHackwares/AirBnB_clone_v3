@@ -27,3 +27,15 @@ def storage_counts():
         "users": storage.count("User")
     }
     return jsonify(cls_counts)
+
+def get_stats():
+    """Get the number of each object type"""
+    stats = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User")
+    }
+    return jsonify(stats)
